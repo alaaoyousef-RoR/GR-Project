@@ -29,7 +29,7 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 app.set('trust proxy', 1);
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
 
 app.use(session({
   secret: SESSION_SECRET,
