@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIDO2 Passkeys with RBA</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
+</head>
+
+<body>
+  <main>
+    <p id="status" class="status"></p>
+
+    <!-- 1. Login View -->
+    <section id="login-view">
+      <div class="card">
+        <img src="logo.png" alt="Logo" class="logo">
+        <h2>Passkey Sign-In</h2>
+        <p class="subtitle">Passwordless Authentication with Context Evaluation</p>
+        <form id="login-form">
+          <input type="text" id="login-identifier" placeholder="Username or email" required autocomplete="username">
+          <button type="submit">Sign in with Passkey</button>
+        </form>
+        <p class="toggle">
+          Don’t have an account? <a href="#" id="show-register">Click here to sign up</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- 2. Register View -->
+    <section id="register-view" class="hidden">
+      <div class="card">
+        <img src="logo.png" alt="Logo" class="logo">
+        <h2>Register Passkey</h2>
+        <p class="subtitle">FIDO2 Enrollment with RBA Baseline Signals</p>
+        <form id="register-form">
+          <input type="email" id="register-email" placeholder="Email Address" required autocomplete="email">
+          <input type="text" id="register-username" placeholder="Username" required autocomplete="username">
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="register-first-name" placeholder="First name" required autocomplete="given-name">
+            <input type="text" id="register-last-name" placeholder="Last name" required autocomplete="family-name">
+          </div>
+
+          <div style="margin: 10px 0; text-align: left;">
+            <label style="font-size: 0.85rem; color: #888; display: block; margin-bottom: 4px;">Expected Working Hours
+              (24h):</label>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <input type="number" id="register-start-hour" min="0" max="23" value="8" required style="width: 50%;">
+              <span>to</span>
+              <input type="number" id="register-end-hour" min="0" max="23" value="17" required style="width: 50%;">
+            </div>
+          </div>
+
+          <button type="submit">Create Passkey</button>
+        </form>
+        <p class="toggle">
+          Already registered? <a href="#" id="show-login">Log in</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- 3. Step-Up OTP View (Medium Risk) -->
+    <section id="otp-view" class="hidden">
+      <div class="card" style="border: 1px solid #ca8a04;">
+        <div
+          style="background: #854d0e; color: #facc15; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; display: inline-block; margin-bottom: 10px;">
+          MEDIUM RISK DETECTED
+        </div>
+        <h2>Step-Up Verification</h2>
+        <p class="subtitle">A contextual signal deviation was detected. Please enter the 6-digit OTP code sent to your
+          email.</p>
+        <form id="otp-form">
+          <input type="password" id="otp-input" maxlength="6" placeholder="••••••" required
+            style="text-align: center; font-size: 1.3rem; letter-spacing: 5px;">
+          <button type="submit" style="background-color: #ca8a04;">Verify Code & Access</button>
+        </form>
+        <p class="toggle">
+          <a href="#" id="cancel-otp-btn">Cancel</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- 4. Security Alert View (High Risk) -->
+    <section id="alert-view" class="hidden">
+      <div class="card" style="border: 1px solid #991b1b; text-align: center;">
+        <div
+          style="background: #991b1b; color: #fca5a5; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; display: inline-block; margin-bottom: 10px;">
+          HIGH RISK ACCESS DENIED
+        </div>
+        <h2 style="color: #ef4444;">Security Alert</h2>
+        <p class="subtitle" style="color: #cbd5e1; line-height: 1.5;">
+          Multiple contextual signals deviated (unrecognized device/location outside working hours). Access has been
+          locked out to protect the account.
+        </p>
+        <button id="alert-back-btn" style="background: #475569; margin-top: 15px;">Back to Login</button>
+      </div>
+    </section>
+
+    <!-- 5. Dashboard View (Access Granted) -->
+    <section id="dashboard-section" class="hidden">
+      <div class="card" style="border: 1px solid #16a34a;">
+        <div
+          style="background: #166534; color: #86efac; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; display: inline-block; margin-bottom: 10px;">
+          ACCESS GRANTED
+        </div>
+        <h2>Dashboard</h2>
+        <p id="dashboard-message" style="margin: 15px 0; color: #e2e8f0;"></p>
+        <button id="logout-btn">Log out</button>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+
+</html>
